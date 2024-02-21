@@ -7,11 +7,9 @@ hands = mp_hands.Hands()
 
 pinch_threshold = 0.03
 
-
 cap = cv2.VideoCapture(0)
 
 while True:
-
     ret, frame = cap.read()
     if not ret:
         break
