@@ -1,25 +1,18 @@
 import cv2
 import mediapipe as mp
 
-
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
-
 pinch_threshold = 0.03
-
 cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
     if not ret:
         break
-
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
     results = hands.process(rgb_frame)
-
     pinch_status = "Not Pinching"
-
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
 
@@ -45,7 +38,6 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
 
 cap.release()
 cv2.destroyAllWindows()

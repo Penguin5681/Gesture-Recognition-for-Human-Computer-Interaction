@@ -14,4 +14,5 @@ while True:
         # Hand 1
         hand_1 = hands[0]
     cv2.imshow("Imag", img)
-    cv2.waitKey(1)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
