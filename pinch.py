@@ -34,7 +34,7 @@ while True:
 
     cv2.imshow("Hand Tracking", frame)
 
-    print(f"Pinch Status: {pinch_status}")
+    print(f"Pinch Status:- {pinch_status}")
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
