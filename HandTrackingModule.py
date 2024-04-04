@@ -6,13 +6,6 @@ import mediapipe as mp
 
 class HandDetector:
     def __init__(self, staticMode=False, maxHands=2, modelComplexity=1, detectionCon=0.5, minTrackCon=0.5):
-        """
-        :param mode: In static mode, detection is done on each image: slower
-        :param maxHands: Maximum number of hands to detect
-        :param modelComplexity: Complexity of the hand landmark model: 0 or 1.
-        :param detectionCon: Minimum Detection Confidence Threshold
-        :param minTrackCon: Minimum Tracking Confidence Threshold
-        """
         self.staticMode = staticMode
         self.maxHands = maxHands
         self.modelComplexity = modelComplexity
@@ -31,12 +24,6 @@ class HandDetector:
         self.lmList = []
 
     def findHands(self, img, draw=True, flipType=True):
-        """
-        Finds hands in a BGR image.
-        :param img: Image to find the hands in.
-        :param draw: Flag to draw the output on the image.
-        :return: Image with or without drawings
-        """
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
         allHands = []
@@ -87,9 +74,6 @@ class HandDetector:
         return allHands, img
 
     def fingersUp(self, myHand):
-        """
-        :return: List of which fingers are up
-        """
         fingers = []
         myHandType = myHand["type"]
         myLmList = myHand["lmList"]
@@ -114,16 +98,6 @@ class HandDetector:
         return fingers
 
     def findDistance(self, p1, p2, img=None, color=(255, 0, 255), scale=5):
-        """
-        Find the distance between two landmarks input should be (x1,y1) (x2,y2)
-        :param p1: Point1 (x1,y1)
-        :param p2: Point2 (x2,y2)
-        :param img: Image to draw output on. If no image input output img is None
-        :return: Distance between the points
-                 Image with output drawn
-                 Line information
-        """
-
         x1, y1 = p1
         x2, y2 = p2
         cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
