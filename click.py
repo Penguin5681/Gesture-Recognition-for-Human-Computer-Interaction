@@ -10,6 +10,12 @@ hands = mp_hands.Hands(max_num_hands=1)
 rightClickCount = 0
 leftClickCount = 0
 
+prev_x = 0
+prev_y = 0
+alpha = 0.3  # Smoothing factor
+
+pinch_detected = False
+
 def find_distance(point1, point2):
     x1, y1 = point1
     x2, y2 = point2
@@ -31,23 +37,35 @@ while True:
             thumb_x, thumb_y = int(thumb_tip.x * frame.shape[1]), int(thumb_tip.y * frame.shape[0])
             index_x, index_y = int(index_tip.x * frame.shape[1]), int(index_tip.y * frame.shape[0])
 
-            scaling_factor = 3  # Make less sensitive: < 1, more sensitive: > 1
-            pyautogui.moveTo(int(index_x * scaling_factor), int(index_y * scaling_factor))
+            scaling_factor = 6  # Vary the sens here, < 1 => Less sensitive : > 1 => More sensitive
+
+            # Smooth out the mouse movement
+            curr_x = int(index_x * scaling_factor)
+            curr_y = int(index_y * scaling_factor)
+            smooth_x = int((1 - alpha) * prev_x + alpha * curr_x)
+            smooth_y = int((1 - alpha) * prev_y + alpha * curr_y)
+            pyautogui.moveTo(smooth_x, smooth_y)
+            prev_x = smooth_x
+            prev_y = smooth_y
 
             pinch_distance = find_distance((thumb_x, thumb_y), (index_x, index_y))
             if pinch_distance < 40:
-                if results.multi_handedness[0].classification[0].label == "Right":
-                    pyautogui.rightClick()
-                    rightClickCount += 1
-                    cv2.putText(frame, "Right Click Triggered", (10, 30),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (248, 36, 102), 2)
-                    print(f"Right Click Count: {rightClickCount}")
-                elif results.multi_handedness[0].classification[0].label == "Left":
-                    pyautogui.click()
-                    leftClickCount += 1
-                    cv2.putText(frame, "Left Click Triggered", (10, 30),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (248, 36, 102), 2)
-                    print(f"Left Click Count: {leftClickCount}")
+                if not pinch_detected:
+                    pinch_detected = True
+                    if results.multi_handedness[0].classification[0].label == "Right":
+                        pyautogui.rightClick()
+                        rightClickCount += 1
+                        cv2.putText(frame, "Right Click Triggered", (10, 30),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 1, (248, 36, 102), 2)
+                        print(f"Right Click Count: {rightClickCount}")
+                    elif results.multi_handedness[0].classification[0].label == "Left":
+                        pyautogui.click()
+                        leftClickCount += 1
+                        cv2.putText(frame, "Left Click Triggered", (10, 30),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 1, (248, 36, 102), 2)
+                        print(f"Left Click Count: {leftClickCount}")
+            else:
+                pinch_detected = False
 
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 

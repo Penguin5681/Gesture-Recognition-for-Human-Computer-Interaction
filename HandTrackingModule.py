@@ -104,10 +104,11 @@ class HandDetector:
         length = math.hypot(x2 - x1, y2 - y1)
         info = (x1, y1, x2, y2, cx, cy)
         if img is not None:
-            cv2.circle(img, (x1, y1), scale, color, cv2.FILLED)
-            cv2.circle(img, (x2, y2), scale, color, cv2.FILLED)
-            cv2.line(img, (x1, y1), (x2, y2), color, max(1, scale // 3))
-            cv2.circle(img, (cx, cy), scale, color, cv2.FILLED)
+            print("Line")
+            # cv2.circle(img, (x1, y1), scale, color, cv2.FILLED)
+            # cv2.circle(img, (x2, y2), scale, color, cv2.FILLED)
+            # cv2.line(img, (x1, y1), (x2, y2), color, max(1, scale // 3))
+            # cv2.circle(img, (cx, cy), scale, color, cv2.FILLED)
 
         return length, info, img
 
